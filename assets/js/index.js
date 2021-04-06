@@ -38,6 +38,9 @@ for (var c = 0; c < brickColumnCount; c++) {
   }
 }
 
+// SCORE
+var score = 0;
+
 //
 
 document.addEventListener("keyup", keyUpHandler, false);
@@ -69,6 +72,12 @@ function collisionDetection() {
         ) {
           dy = -dy;
           b.status = 0;
+          score++;
+          if (score == brickRowCount * brickColumnCount) {
+            alert(`C'est gagné avec ${score} points, Bravo!`);
+            document.location.reload();
+            clearInterval(interval); // Needed for Chrome to end game
+          }
         }
       }
     }
@@ -109,12 +118,19 @@ function drawBricks() {
   }
 }
 
+function drawScore() {
+  ctx.font = "16px Arial";
+  ctx.fillStyle = "#0095DD";
+  ctx.fillText("Score: " + score, 8, 20);
+}
+
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   drawBall();
   drawPaddle();
   drawBricks();
   collisionDetection();
+  drawScore();
 
   if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
     dx = -dx;
@@ -125,7 +141,7 @@ function draw() {
     if (x > paddleX && x < paddleX + paddleWidth) {
       dy = -dy;
     } else {
-      alert("GAME OVER");
+      alert(`PERDU !  Tu a ${score} points`);
       document.location.reload();
       clearInterval(interval);
     }
